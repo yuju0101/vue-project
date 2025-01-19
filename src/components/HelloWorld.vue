@@ -1,44 +1,61 @@
 <template>
-  <form>
-    <div class="item">
-      <label for="productName" class="form-label">產品名稱</label>
-      <input
-        type="text"
-        id="productName"
-        class="form-control"
-        placeholder="請輸入產品名稱"
-        v-model="newAddProduct.productName"
-      />
-    </div>
-    <div class="item">
-      <img :src="newAddProduct.productImageUrl" class="img-fluid" alt="" />
-      <label for="productImage" class="form-label">產品圖片</label>
-      <input
-        type="text"
-        id="productImage"
-        class="form-control"
-        placeholder="請輸入產品圖片"
-        v-model="newAddProduct.productImageUrl"
-      />
-    </div>
-    <button type="button" class="button" @click="confirmEdit">更新</button>
-  </form>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>產品名稱</th>
-        <th>產品圖片</th>
-        <th>存貨狀態</th>
-      </tr>
-      <tr v-for="(item, idx) in newProducts" key="idx">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td><img :src="item.imageUrl" class="img-fluid" alt="item.name " /></td>
-        <td>{{ item.onStock ? '缺貨' : '有貨' }}</td>
-      </tr>
-    </thead>
-  </table>
+  <div class="form-wrap">
+    <button type="button" class="button" @click="addNewItem">新增產品</button>
+    <form v-if="newItem">
+      <div class="item-wrap">
+        <div class="item">
+          <label for="name" class="form-label">產品名稱</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            placeholder="請輸入產品名稱"
+            v-model="newAddProduct.name"
+          />
+        </div>
+        <div class="item input-wrap">
+          <div>
+            <label for="productImage" class="form-label">產品圖片</label>
+            <input
+              type="text"
+              id="productImage"
+              class="form-control"
+              placeholder="請輸入產品圖片"
+              v-model="newAddProduct.imageUrl"
+            />
+          </div>
+          <div class="img-area">
+            <img :src="newAddProduct.imageUrl" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+      <div class="button-wrap">
+        <button type="button" class="button" @click="confirmEdit">更新</button>
+        <button type="button" class="button" @click="cancelEdit">取消</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>產品名稱</th>
+          <th>產品圖片</th>
+          <th>存貨狀態</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="(item, idx) in newProducts" key="idx">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td class="img-wrap"><img :src="item.imageUrl" class="img-fluid" :alt="item.name" /></td>
+          <td>{{ item.onStock ? '缺貨' : '有貨' }}</td>
+          <td><button type="button" class="button" @click="editItem(item)">修改</button></td>
+        </tr>
+      </thead>
+    </table>
+  </div>
 </template>
 
 <script setup>
@@ -66,21 +83,48 @@ const fetchOriginData = () => {
 }
 
 const newAddProduct = ref({
-  productName: '',
-  productImageUrl:
-    'https://images.unsplash.com/photo-1602526430780-782d6b1783fa?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+  name: '',
+  imageUrl: '',
 })
 
+const newItem = ref(false)
+const addNewItem = () => {
+  newItem.value = true
+}
+
 const confirmEdit = () => {
-  const data = {
-    id: new Date().getTime(), //unix timestamp
-    imageUrl: newAddProduct.value.productImageUrl,
-    name: newAddProduct.value.productName,
-    onStock: false,
+  if (!newAddProduct.value.id) {
+    const data = {
+      id: new Date().getTime(), //unix timestamp
+      imageUrl: newAddProduct.value.imageUrl,
+      name: newAddProduct.value.name,
+      onStock: false,
+    }
+    newProducts.value.push(data)
+  } else {
+    console.log('same')
+    // 比對資料id
+    newProducts.value.forEach((item, index) => {
+      if (item.id === newAddProduct.value.id) {
+        newProducts.value[index] = { ...newAddProduct.value }
+      }
+    })
   }
-  newProducts.value.push(data)
-  newAddProduct.value.productName = ''
-  newAddProduct.value.productImageUrl = ''
+  newAddProduct.value = {}
+  newItem.value = false
+}
+
+const cancelEdit = () => {
+  newAddProduct.value = {}
+  newItem.value = false
+}
+
+const editItem = (cilckedItem) => {
+  console.log(cilckedItem)
+  newAddProduct.value = { ...cilckedItem }
+  console.log('newAddProduct', newAddProduct.value)
+  console.log('newProducts', newProducts.value)
+  newItem.value = true
 }
 
 onMounted(() => {
@@ -97,28 +141,80 @@ table {
   }
 }
 
-form {
-  display: flex;
-  margin-top: 0em;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
+.form-wrap {
+  margin: 60px 0 24px 0;
+}
 
-  .item {
-    margin-bottom: 20px;
+form {
+  margin: 16px 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .item-wrap {
+    display: flex;
+    .item {
+      margin-bottom: 20px;
+      margin-right: 40px;
+      label {
+        display: block;
+        margin-bottom: 4px;
+      }
+      input {
+        display: block;
+        padding: 12px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    }
+    .input-wrap {
+      display: flex;
+    }
   }
 
   .form-label {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     margin-right: 8px;
     display: inline-block;
+    color: #3b3b3b;
   }
 }
 
+.table-wrap {
+  background-color: #fbfbfb;
+  border: 1.5px solid #f4f4f4;
+  border-radius: 10px;
+  padding: 16px 24px;
+
+  th {
+    text-align: center;
+    font-weight: 700;
+    color: #3b3b3b;
+    padding: 16px 0;
+  }
+
+  td {
+    text-align: center;
+    margin: 12px 0;
+    &.img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        display: block;
+        width: 100px;
+        height: auto;
+      }
+    }
+  }
+}
 .button {
-  color: #fff;
-  background-color: #4663c3;
+  color: #6272c3;
+  background-color: #eff3fc;
+  border: 1.5px solid #f4f4f4;
+  font-weight: bold;
   border: none;
   padding: 10px 20px;
   border-radius: 10px;
@@ -127,10 +223,37 @@ form {
   font-size: 16px;
 }
 .img-fluid {
-  /* max-width: 100%; */
   height: auto;
   object-fit: cover;
   display: block;
   width: 300px;
+  border-radius: 5px;
+}
+
+.img-area {
+  width: auto;
+  height: 200px;
+  margin: 0 24px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  /* &::after {
+    content: '圖片預覽';
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #abaeba;
+  } */
+}
+
+.button-wrap {
+  display: flex;
+  flex-direction: column;
+  .button {
+    margin-bottom: 16px;
+  }
 }
 </style>
