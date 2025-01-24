@@ -1,65 +1,85 @@
 <template>
-  <div class="form-wrap">
-    <button type="button" class="button" @click="addNewItem">新增產品</button>
-    <form v-if="newItem">
-      <div class="item-wrap">
-        <div class="item">
-          <label for="name" class="form-label">產品名稱</label>
-          <input
-            type="text"
-            id="name"
-            class="form-control"
-            placeholder="請輸入產品名稱"
-            v-model="newAddProduct.name"
-          />
-        </div>
-        <div class="item input-wrap">
-          <div>
-            <label for="productImage" class="form-label">產品圖片</label>
+  <div class="list-wrap">
+    <!-- title area -->
+    <section>
+      <Title>
+        放鬆列表
+        <template #subtitle> 雙手張開的距離才是我需要在乎的 </template>
+        <template #btns>
+          <IconBlock :icon="['fas', 'magnifying-glass']" />
+          <IconBlock :icon="['fas', 'circle-info']" />
+        </template>
+      </Title>
+    </section>
+
+    <!-- add area -->
+    <section class="form-wrap">
+      <button type="button" class="button" @click="addNewItem">新增產品</button>
+      <form v-if="newItem">
+        <div class="item-wrap">
+          <div class="item">
+            <label for="name" class="form-label">產品名稱</label>
             <input
               type="text"
-              id="productImage"
+              id="name"
               class="form-control"
-              placeholder="請輸入產品圖片"
-              v-model="newAddProduct.imageUrl"
+              placeholder="請輸入產品名稱"
+              v-model="newAddProduct.name"
             />
           </div>
-          <div class="img-area">
-            <img :src="newAddProduct.imageUrl" class="img-fluid" />
+          <div class="item input-wrap">
+            <div>
+              <label for="productImage" class="form-label">產品圖片</label>
+              <input
+                type="text"
+                id="productImage"
+                class="form-control"
+                placeholder="請輸入產品圖片"
+                v-model="newAddProduct.imageUrl"
+              />
+            </div>
+            <div class="img-area">
+              <img :src="newAddProduct.imageUrl" class="img-fluid" />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="button-wrap">
-        <button type="button" class="button" @click="confirmEdit">更新</button>
-        <button type="button" class="button" @click="cancelEdit">取消</button>
-      </div>
-    </form>
-  </div>
+        <div class="button-wrap">
+          <button type="button" class="button" @click="confirmEdit">更新</button>
+          <button type="button" class="button" @click="cancelEdit">取消</button>
+        </div>
+      </form>
+    </section>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>產品名稱</th>
-          <th>產品圖片</th>
-          <th>存貨狀態</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="(item, idx) in newProducts" key="idx">
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td class="img-wrap"><img :src="item.imageUrl" class="img-fluid" :alt="item.name" /></td>
-          <td>{{ item.onStock ? '缺貨' : '有貨' }}</td>
-          <td><button type="button" class="button" @click="editItem(item)">修改</button></td>
-        </tr>
-      </thead>
-    </table>
+    <!-- list area -->
+    <section class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>產品名稱</th>
+            <th>產品圖片</th>
+            <th>存貨狀態</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="(item, idx) in newProducts" key="idx">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td class="img-wrap">
+              <img :src="item.imageUrl" class="img-fluid" :alt="item.name" />
+            </td>
+            <td>{{ item.onStock ? '缺貨' : '有貨' }}</td>
+            <td><button type="button" class="button" @click="editItem(item)">修改</button></td>
+          </tr>
+        </thead>
+      </table>
+    </section>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import Title from './Title.vue'
+import IconBlock from './atoms/iconBlock.vue'
 const newProducts = ref([])
 const products = [
   {
@@ -133,6 +153,11 @@ onMounted(() => {
 </script>
 
 <style scoped land="scss">
+.list-wrap {
+  padding: 1.5rem 2rem;
+  width: 100%;
+}
+
 table {
   width: 100%;
   th,
@@ -142,7 +167,7 @@ table {
 }
 
 .form-wrap {
-  margin: 60px 0 24px 0;
+  margin-bottom: 1rem;
 }
 
 form {
@@ -238,15 +263,6 @@ form {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  /* &::after {
-    content: '圖片預覽';
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #abaeba;
-  } */
 }
 
 .button-wrap {
@@ -255,5 +271,18 @@ form {
   .button {
     margin-bottom: 16px;
   }
+}
+
+/* /// */
+.header-icon {
+  margin-right: 8px;
+  background-color: #eff3fc;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 </style>
