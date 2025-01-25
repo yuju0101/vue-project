@@ -10,23 +10,8 @@ import Navigation from './components/Navigation.vue'
   <Header />
   <div class="wrapper">
     <Navigation />
-    <ItemList />
+    <RouterView />
   </div>
-
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <itemList msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView /> -->
 </template>
 
 <style scoped>

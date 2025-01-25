@@ -10,6 +10,7 @@
 body {
   /* display: flex; */
   /* place-items: center; */
+  overflow: hidden;
   background-color: #fff;
   color: #616066;
 }
@@ -19,6 +20,12 @@ a {
   color: #616066;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.5rem 2rem;
+}
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
