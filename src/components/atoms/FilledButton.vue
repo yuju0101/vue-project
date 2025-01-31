@@ -1,6 +1,6 @@
 <template>
   <button type="button" v-bind="$attrs">
-    <div class="icon-wrap">
+    <div v-if="icon" class="icon-wrap">
       <font-awesome-icon :icon="icon" />
     </div>
     <slot></slot>
@@ -10,8 +10,9 @@
 <script setup>
 defineProps({
   icon: {
-    type: Array,
+    type: [Array, String, Object], // FontAwesome 可接受三種格式
     required: false,
+    default: null, // 確保未提供 icon 時不會報錯
   },
 })
 </script>
@@ -29,6 +30,12 @@ button {
   align-items: center;
   height: fit-content;
   font-size: 16px;
+
+  &:hover {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+  }
 }
 .icon-wrap {
   margin-right: 4px;
