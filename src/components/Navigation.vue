@@ -1,21 +1,35 @@
 <template>
   <div class="nav-wrap">
-    <button class="nav-item">
-      <div class="icon"><font-awesome-icon :icon="['fas', 'mug-saucer']" /></div>
-      放鬆列表
-    </button>
-    <button class="nav-item">
-      <div class="icon"><font-awesome-icon :icon="['fas', 'scroll']" /></div>
-      工作準則
-    </button>
-    <button class="nav-item">
-      <div class="icon"><font-awesome-icon :icon="['fas', 'calendar']" /></div>
-      估時紀錄
-    </button>
-    <button class="nav-item">
-      <div class="icon"><font-awesome-icon :icon="['fas', 'puzzle-piece']" /></div>
-      其他學習資源
-    </button>
+    <RouterLink to="/"
+      ><button class="nav-item">
+        <div class="icon"><font-awesome-icon :icon="['fas', 'puzzle-piece']" /></div>
+        首頁
+      </button>
+    </RouterLink>
+    <RouterLink to="/relax">
+      <button class="nav-item">
+        <div class="icon"><font-awesome-icon :icon="['fas', 'mug-saucer']" /></div>
+        放鬆列表
+      </button>
+    </RouterLink>
+    <RouterLink to="/rule"
+      ><button class="nav-item">
+        <div class="icon"><font-awesome-icon :icon="['fas', 'scroll']" /></div>
+        工作準則
+      </button>
+    </RouterLink>
+    <RouterLink to="/estimate"
+      ><button class="nav-item">
+        <div class="icon"><font-awesome-icon :icon="['fas', 'calendar']" /></div>
+        估時紀錄
+      </button>
+    </RouterLink>
+    <RouterLink to="/resource"
+      ><button class="nav-item">
+        <div class="icon"><font-awesome-icon :icon="['fas', 'puzzle-piece']" /></div>
+        其他學習資源
+      </button>
+    </RouterLink>
   </div>
 </template>
 
@@ -32,6 +46,7 @@ button.nav-item {
   width: 100%;
   padding: 16px;
   width: 200px;
+  font-size: 16px;
   margin: 0 16px 16px 16px;
   border-radius: 10px;
   display: block;
