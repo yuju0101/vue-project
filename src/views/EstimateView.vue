@@ -14,8 +14,15 @@
       </template>
       <template #link="{ row }">
         <div class="btn-wrap">
-          <!-- @click="goToLink" -->
-          <FilledButton :icon="['fas', 'arrow-right']">前往</FilledButton>
+          <!-- 透過 router 來連結詳細頁 -->
+          <router-link :to="{ name: 'EstimateDetailView', params: { id: row.id } }">
+            <FilledButton :icon="['fas', 'arrow-right']"> 前往 </FilledButton>
+          </router-link>
+
+          <!-- 透過 click事件 來連結詳細頁 -->
+          <!-- <FilledButton :icon="['fas', 'arrow-right']" @click="goToDetail(row.id)">
+            前往
+          </FilledButton> -->
         </div>
       </template>
     </Table>
@@ -23,11 +30,21 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import Title from '@/components/Title.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import Table from '@/components/atoms/Table.vue'
 import FilledButton from '@/components/atoms/FilledButton.vue'
+
+// 定義 router
+import { useRoute } from 'vue-router'
+const route = useRoute()
+// 使用 computed 確保 paramsId 是響應式的
+const paramsId = computed(() => route.params.id)
+// 監聽 id 變化，重新請求資料
+watch(paramsId, (newId) => {
+  console.log('ID 變更為:', newId)
+})
 
 const tableHeaders = [
   {
@@ -121,10 +138,6 @@ const tableData = [
   },
 ]
 
-const fetchOriginData = () => {
-  newProducts.value.push(...products)
-}
-
 const statusCheck = (status) => {
   if (status) {
     if (status === '已完成') {
@@ -147,9 +160,16 @@ const reactiveTimeCheck = (estimateTime, reactiveTime) => {
   }
 }
 
-onMounted(() => {
-  fetchOriginData()
-})
+const goToLink = (row) => {
+  console.log('前往連結:', row.link)
+}
+
+const goToDetail = (id) => {
+  router.push({ name: 'EstimateDetailView', params: { id } })
+  console.log('前往詳細頁:', id)
+}
+
+onMounted(() => {})
 </script>
 <style scope lang="scss">
 .table-wrap {
