@@ -100,20 +100,6 @@ const tableHeaders = [
   },
 ]
 
-// api 串接
-const tableData = ref([])
-const apiUrl = 'http://localhost:3000'
-const fetchTableData = async () => {
-  try {
-    const fetchDataUrl = `${apiUrl}/estimates`
-    const response = await fetch(fetchDataUrl)
-    const result = await response.json()
-    tableData.value = result.data
-  } catch (error) {
-    console.error('Fetch API failed:', error)
-  }
-}
-
 const statusCheck = (status) => {
   if (status) {
     if (status === '已完成') {
