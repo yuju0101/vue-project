@@ -127,6 +127,28 @@ const goToDetail = (id) => {
   console.log('前往詳細頁:', id)
 }
 
+const statusCheck = (status) => {
+  if (status) {
+    if (status === '已完成') {
+      return 'status-tag-finished'
+    } else if (status === '進行中') {
+      return 'status-tag-processing'
+    } else if (status === '暫停中') {
+      return 'status-tag-pause'
+    } else if (status === '未完成') {
+      return 'status-tag-failed'
+    }
+  }
+}
+
+const reactiveTimeCheck = (estimateTime, reactiveTime) => {
+  if (reactiveTime > estimateTime) {
+    return 'time-warning'
+  } else if (reactiveTime < estimateTime) {
+    return 'time-successful'
+  }
+}
+
 onMounted(() => {
   estimateStore.fetchTableData()
 })
