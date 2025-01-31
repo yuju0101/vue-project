@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Title>估時紀錄</Title>
-    <Table :tableHeaders="tableHeaders" :tableData="tableData">
+    <Table :tableHeaders="tableHeaders" :tableData="estimateStore.tableData">
       <template #reactiveTime="{ row }">
         <span :class="reactiveTimeCheck(row.estimateTime, row.reactiveTime)">
           {{ row.reactiveTime }}
@@ -31,6 +31,9 @@
 
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue'
+import { useEstimateStore } from '@/stores/estimateStore'
+
+// 引用元件
 import Title from '@/components/Title.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import Table from '@/components/atoms/Table.vue'
@@ -38,6 +41,8 @@ import FilledButton from '@/components/atoms/FilledButton.vue'
 
 // 定義 router
 import { useRoute } from 'vue-router'
+
+const estimateStore = useEstimateStore()
 const route = useRoute()
 // 使用 computed 確保 paramsId 是響應式的
 const paramsId = computed(() => route.params.id)
@@ -95,20 +100,6 @@ const tableHeaders = [
   },
 ]
 
-// api 串接
-const tableData = ref([])
-const apiUrl = 'http://localhost:3000'
-const fetchTableData = async () => {
-  try {
-    const fetchDataUrl = `${apiUrl}/estimates`
-    const response = await fetch(fetchDataUrl)
-    const result = await response.json()
-    tableData.value = result.data
-  } catch (error) {
-    console.error('Fetch API failed:', error)
-  }
-}
-
 const statusCheck = (status) => {
   if (status) {
     if (status === '已完成') {
@@ -137,7 +128,7 @@ const goToDetail = (id) => {
 }
 
 onMounted(() => {
-  fetchTableData()
+  estimateStore.fetchTableData()
 })
 </script>
 <style scope lang="scss">
