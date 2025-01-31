@@ -31,9 +31,12 @@
 
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue'
+<<<<<<< HEAD
 import { useEstimateStore } from '@/stores/estimateStore'
 
 // 引用元件
+=======
+>>>>>>> 2de6fac7b5a0ddb53b308eaaae74faced193fc78
 import Title from '@/components/Title.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import Table from '@/components/atoms/Table.vue'
@@ -41,8 +44,11 @@ import FilledButton from '@/components/atoms/FilledButton.vue'
 
 // 定義 router
 import { useRoute } from 'vue-router'
+<<<<<<< HEAD
 
 const estimateStore = useEstimateStore()
+=======
+>>>>>>> 2de6fac7b5a0ddb53b308eaaae74faced193fc78
 const route = useRoute()
 // 使用 computed 確保 paramsId 是響應式的
 const paramsId = computed(() => route.params.id)
@@ -147,6 +153,11 @@ const reactiveTimeCheck = (estimateTime, reactiveTime) => {
   } else if (reactiveTime < estimateTime) {
     return 'time-successful'
   }
+}
+
+const goToDetail = (id) => {
+  route.push({ name: 'EstimateDetailView', params: { id } })
+  console.log('前往詳細頁:', id)
 }
 
 onMounted(() => {
