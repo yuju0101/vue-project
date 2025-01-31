@@ -1,58 +1,57 @@
 <template>
   <div class="container">
-    <!-- title area -->
-    <section>
-      <Title>
-        估時紀錄
-        <template #btns>
-          <IconBlock :icon="['fas', 'magnifying-glass']" />
-          <IconBlock :icon="['fas', 'circle-info']" />
-        </template>
-      </Title>
-    </section>
-    <!-- list area -->
-    <section class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>number</th>
-            <th>專案名稱</th>
-            <th>Backlog名稱</th>
-            <th>估計時數</th>
-            <th>實際時數</th>
-            <th>執行紀錄</th>
-            <th>狀態</th>
-            <th>連接</th>
-          </tr>
-          <tr v-for="(item, idx) in newProducts" key="idx">
-            <td>
-              <FilledButton class="button" @click="editItem(item)">選</FilledButton>
-            </td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.bcaklogNum }}</td>
-            <td>{{ item.project }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.estimateTime }}</td>
-            <td>{{ item.reactiveTime }}</td>
-            <td>{{ item.status }}</td>
-            <td><a :href="item.link" target="_blank">backlog連結</a></td>
-          </tr>
-        </thead>
-      </table>
-    </section>
-    <Table></Table>
+    <Title>估時紀錄</Title>
+    <Table :tableHeaders="tableHeaders" :tableData="estimateStore.tableData">
+      <template #reactiveTime="{ row }">
+        <span :class="reactiveTimeCheck(row.estimateTime, row.reactiveTime)">
+          {{ row.reactiveTime }}
+        </span>
+      </template>
+      <template #status="{ row }">
+        <span :class="statusCheck(row.status)">
+          {{ row.status }}
+        </span>
+      </template>
+      <template #link="{ row }">
+        <div class="btn-wrap">
+          <!-- 透過 router 來連結詳細頁 -->
+          <router-link :to="{ name: 'EstimateDetailView', params: { id: row.id } }">
+            <FilledButton :icon="['fas', 'arrow-right']"> 前往 </FilledButton>
+          </router-link>
+
+          <!-- 透過 click事件 來連結詳細頁 -->
+          <!-- <FilledButton :icon="['fas', 'arrow-right']" @click="goToDetail(row.id)">
+            前往
+          </FilledButton> -->
+        </div>
+      </template>
+    </Table>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
+import { useEstimateStore } from '@/stores/estimateStore'
+
+// 引用元件
 import Title from '@/components/Title.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import Table from '@/components/atoms/Table.vue'
 import FilledButton from '@/components/atoms/FilledButton.vue'
-const newProducts = ref([])
-const products = [
+
+// 定義 router
+import { useRoute } from 'vue-router'
+
+const estimateStore = useEstimateStore()
+const route = useRoute()
+// 使用 computed 確保 paramsId 是響應式的
+const paramsId = computed(() => route.params.id)
+// 監聽 id 變化，重新請求資料
+watch(paramsId, (newId) => {
+  console.log('ID 變更為:', newId)
+})
+
+const tableHeaders = [
   {
     id: '1',
     bcaklogNum: '97453',
@@ -95,12 +94,35 @@ const products = [
   },
 ]
 
-const fetchOriginData = () => {
-  newProducts.value.push(...products)
+const statusCheck = (status) => {
+  if (status) {
+    if (status === '已完成') {
+      return 'status-tag-finished'
+    } else if (status === '進行中') {
+      return 'status-tag-processing'
+    } else if (status === '暫停中') {
+      return 'status-tag-pause'
+    } else if (status === '未完成') {
+      return 'status-tag-failed'
+    }
+  }
+}
+
+const reactiveTimeCheck = (estimateTime, reactiveTime) => {
+  if (reactiveTime > estimateTime) {
+    return 'time-warning'
+  } else if (reactiveTime < estimateTime) {
+    return 'time-successful'
+  }
+}
+
+const goToDetail = (id) => {
+  route.push({ name: 'EstimateDetailView', params: { id } })
+  console.log('前往詳細頁:', id)
 }
 
 onMounted(() => {
-  fetchOriginData()
+  estimateStore.fetchTableData()
 })
 </script>
 <style>
