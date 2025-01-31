@@ -14,7 +14,8 @@
 
     <!-- add area -->
     <section class="form-wrap">
-      <button type="button" class="button" @click="addNewItem">新增產品</button>
+      <button type="button" class="button" @click="addNewItem">新增產品sss</button>
+      <FilledButton>更新</FilledButton>
       <form v-if="newItem">
         <div class="item-wrap">
           <div class="item">
@@ -79,7 +80,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import Title from './Title.vue'
-import IconBlock from './atoms/iconBlock.vue'
+import IconBlock from './atoms/IconBlock.vue'
+import FilledButton from './atoms/FilledButton.vue'
 const newProducts = ref([])
 const products = [
   {
@@ -218,11 +220,13 @@ form {
     font-weight: 700;
     color: #3b3b3b;
     padding: 16px 0;
+    font-size: 16px;
   }
 
   td {
     text-align: center;
     margin: 12px 0;
+    font-size: 16px;
     &.img-wrap {
       display: flex;
       justify-content: center;
