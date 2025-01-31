@@ -30,14 +30,6 @@
   justify-content: space-between;
   padding: 24px 0;
 }
-h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-p {
-  font-size: 16px;
-}
 .icon-wrap {
   display: flex;
   align-items: center;
