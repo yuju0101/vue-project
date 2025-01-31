@@ -19,7 +19,9 @@ a {
   text-decoration: none;
   color: #616066;
 }
-
+a:hover {
+  background-color: transparent !important;
+}
 .container {
   display: flex;
   flex-direction: column;

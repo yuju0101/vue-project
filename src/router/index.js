@@ -25,7 +25,7 @@ const router = createRouter({
       component: () => import('../views/EstimateView.vue'),
     },
     {
-      path: '/estimate',
+      path: '/estimate/:id',
       name: 'EstimateDetailView',
       component: () => import('../views/detailPages/EstimateDetailView.vue'),
     },

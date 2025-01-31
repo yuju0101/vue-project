@@ -131,7 +131,7 @@ onMounted(() => {
   estimateStore.fetchTableData()
 })
 </script>
-<style>
+<style scoped lang="scss">
 .table-wrap {
   background-color: #fbfbfb;
   border: 1.5px solid #f4f4f4;
@@ -159,5 +159,55 @@ onMounted(() => {
       }
     }
   }
+}
+
+.status-tag {
+  &-processing {
+    padding: 4px 6px;
+    font-size: 14px;
+    background-color: #ebf6eb;
+    color: #008000;
+    border-radius: 4px;
+    border: 0.5px solid #f4f4f4;
+  }
+  &-pause {
+    padding: 4px 6px;
+    font-size: 14px;
+    background-color: #f6efea;
+    color: #cf7e27;
+    border-radius: 4px;
+    border: 0.5px solid #f4f4f4;
+  }
+  &-failed {
+    padding: 4px 6px;
+    font-size: 14px;
+    background-color: #fff4f8;
+    color: #cb304c;
+    border-radius: 4px;
+    border: 0.5px solid #f4f4f4;
+  }
+  &-finished {
+    padding: 4px 6px;
+    font-size: 14px;
+    background-color: #eff3fc;
+    color: #6272c3;
+    border-radius: 4px;
+    border: 0.5px solid #f4f4f4;
+  }
+}
+
+.time-warning {
+  font-weight: bold;
+  color: #cb304c;
+}
+
+.time-successful {
+  font-weight: bold;
+  color: #6272c3;
+}
+
+.btn-wrap {
+  display: flex;
+  justify-content: center;
 }
 </style>
