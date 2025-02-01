@@ -31,12 +31,9 @@
 
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue'
-<<<<<<< HEAD
 import { useEstimateStore } from '@/stores/estimateStore'
 
 // 引用元件
-=======
->>>>>>> 2de6fac7b5a0ddb53b308eaaae74faced193fc78
 import Title from '@/components/Title.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import Table from '@/components/atoms/Table.vue'
@@ -44,11 +41,8 @@ import FilledButton from '@/components/atoms/FilledButton.vue'
 
 // 定義 router
 import { useRoute } from 'vue-router'
-<<<<<<< HEAD
 
 const estimateStore = useEstimateStore()
-=======
->>>>>>> 2de6fac7b5a0ddb53b308eaaae74faced193fc78
 const route = useRoute()
 // 使用 computed 確保 paramsId 是響應式的
 const paramsId = computed(() => route.params.id)
@@ -105,33 +99,6 @@ const tableHeaders = [
     slotName: 'link',
   },
 ]
-
-const statusCheck = (status) => {
-  if (status) {
-    if (status === '已完成') {
-      return 'status-tag-finished'
-    } else if (status === '進行中') {
-      return 'status-tag-processing'
-    } else if (status === '暫停中') {
-      return 'status-tag-pause'
-    } else if (status === '未完成') {
-      return 'status-tag-failed'
-    }
-  }
-}
-
-const reactiveTimeCheck = (estimateTime, reactiveTime) => {
-  if (reactiveTime > estimateTime) {
-    return 'time-warning'
-  } else if (reactiveTime < estimateTime) {
-    return 'time-successful'
-  }
-}
-
-const goToDetail = (id) => {
-  route.push({ name: 'EstimateDetailView', params: { id } })
-  console.log('前往詳細頁:', id)
-}
 
 const statusCheck = (status) => {
   if (status) {
