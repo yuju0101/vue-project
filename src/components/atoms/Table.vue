@@ -59,4 +59,33 @@ th {
 td {
   text-align: center;
 }
+
+.table-wrap {
+  background-color: #fbfbfb;
+  border: 1.5px solid #f4f4f4;
+  border-radius: 10px;
+  padding: 16px 24px;
+
+  th {
+    text-align: center;
+    font-weight: 700;
+    color: #3b3b3b;
+    padding: 16px 0;
+  }
+
+  td {
+    text-align: center;
+    margin: 12px 0;
+    &.img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        display: block;
+        width: 100px;
+        height: auto;
+      }
+    }
+  }
+}
 </style>

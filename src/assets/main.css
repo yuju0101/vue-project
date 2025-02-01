@@ -20,7 +20,7 @@ a {
   color: #616066;
 }
 a:hover {
-  background-color: transparent !important;
+  border-radius: 10px;
 }
 
 .container {
