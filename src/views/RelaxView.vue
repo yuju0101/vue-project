@@ -4,7 +4,7 @@
     <section>
       <Title>
         放鬆列表
-        <template #subtitle> 雙手張開的距離才是我需要在乎的 </template>
+        <template #subtitle> 聽音樂來場適當的放鬆 </template>
         <template #btns>
           <IconBlock :icon="['fas', 'magnifying-glass']" />
           <IconBlock :icon="['fas', 'circle-info']" />
@@ -14,31 +14,41 @@
 
     <!-- add area -->
     <section class="form-wrap">
-      <FilledButton :icon="['fas', 'plus']" @click="addNewItem">新增產品</FilledButton>
-      <form v-if="newItem">
+      <FilledButton :icon="['fas', 'plus']" @click="addNewItem">新增音樂</FilledButton>
+      <div v-if="newItem" class="form">
         <div class="item-wrap">
           <div class="item">
-            <label for="name" class="form-label">產品名稱</label>
+            <label for="name" class="form-label">藝人</label>
             <input
               type="text"
               id="name"
               class="form-control"
-              placeholder="請輸入產品名稱"
+              placeholder="請輸入藝人名稱"
               v-model="newAddProduct.name"
+            />
+          </div>
+          <div class="item">
+            <label for="song" class="form-label">歌曲名稱</label>
+            <input
+              type="text"
+              id="song"
+              class="form-control"
+              placeholder="請輸入歌曲名稱"
+              v-model="newAddProduct.song"
             />
           </div>
           <div class="item input-wrap">
             <div>
-              <label for="productImage" class="form-label">產品圖片</label>
+              <label for="productImage" class="form-label">專輯圖片</label>
               <input
                 type="text"
                 id="productImage"
                 class="form-control"
-                placeholder="請輸入產品圖片"
+                placeholder="請輸入專輯圖片"
                 v-model="newAddProduct.imageUrl"
               />
             </div>
-            <div class="img-area">
+            <div class="img-area" v-if="newAddProduct.imageUrl">
               <img :src="newAddProduct.imageUrl" class="img-fluid" />
             </div>
           </div>
@@ -47,69 +57,117 @@
           <FilledButton @click="confirmEdit" class="button">更新</FilledButton>
           <FilledButton @click="cancelEdit">取消</FilledButton>
         </div>
-      </form>
+      </div>
     </section>
 
     <!-- list area -->
-    <section class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>產品名稱</th>
-            <th>產品圖片</th>
-            <th>存貨狀態</th>
-            <th>操作</th>
-          </tr>
-          <tr v-for="(item, idx) in newProducts" key="idx">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td class="img-wrap">
-              <img :src="item.imageUrl" class="img-fluid" :alt="item.name" />
-            </td>
-            <td>{{ item.onStock ? '缺貨' : '有貨' }}</td>
-            <td>
-              <FilledButton class="button" @click="editItem(item)">修改</FilledButton>
-            </td>
-          </tr>
-        </thead>
-      </table>
+    <section class="flow-area">
+      <Table :tableHeaders="tableHeaders" :tableData="newProducts">
+        <template #imageUrl="{ row }">
+          <div class="img-wrap">
+            <img :src="row.imageUrl" class="img-fluid" :alt="row.name" />
+          </div>
+        </template>
+        <template #listened="{ row }">
+          {{ row.listened ? '已聆聽' : '未聆聽' }}
+        </template>
+        <template #action="{ row }">
+          <div class="btn-wrap">
+            <FilledButton @click="editItem(row)">修改</FilledButton>
+          </div>
+        </template>
+      </Table>
     </section>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+
+// components
 import Title from '@/components/Title.vue'
+import Table from '@/components/atoms/Table.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import FilledButton from '@/components/atoms/FilledButton.vue'
+
 const newProducts = ref([])
-const products = [
+const tableHeaders = [
+  {
+    key: 'id',
+    width: '5%',
+    label: 'ID',
+    slotName: 'id',
+  },
+
+  {
+    key: 'name',
+    width: '10%',
+    label: '藝人',
+  },
+  {
+    key: 'song',
+    width: '10%',
+    label: '歌曲名稱',
+  },
+  {
+    key: 'imageUrl',
+    width: '10%',
+    label: '專輯圖片',
+    slotName: 'imageUrl',
+  },
+  {
+    key: 'listened',
+    width: '10%',
+    label: '聆聽狀態',
+    slotName: 'listened',
+  },
+  {
+    key: 'action',
+    width: '10%',
+    label: '操作',
+    slotName: 'action',
+  },
+]
+const products = ref([
   {
     id: '1',
     imageUrl:
-      'https://images.unsplash.com/photo-1516906571665-49af58989c4e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=300&q=80',
-    name: 'MacBook Pro',
-    onStock: false,
+      'https://lh3.googleusercontent.com/gT--ZwubK3mlhw5WcwBReN9QSJpzLzZntA20Js3XxTeX4CZXa-OEq89tmrwJugV97U5GJTtKS4ofzpV2mQ=w544-h544-l90-rj',
+    name: 'Lee Jin Ah',
+    song: 'Starry Night',
+    listened: false,
   },
   {
     id: '2',
     imageUrl:
-      'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
-    name: 'iPhone',
-    onStock: false,
+      'https://lh3.googleusercontent.com/kiU4wpUCReZaSxlujjo8Ye-wN37aYR3gjkNoNEriU1G-sbV4Y1dmS9a5HWRD8JP0yv08lfSvWHe3ykZP=w544-h544-l90-rj',
+    name: 'Choi Yu Ree',
+    song: '숲',
+    listened: true,
   },
-]
+  {
+    id: '3',
+    imageUrl:
+      'https://lh3.googleusercontent.com/6NCf4gce8p3kug3e-I7u8HfObnCdaLi5ranbyxVh9iPBXVTda1xckbvWK7IZnxZTczfqLLrB8bV2Lvo=w544-h544-l90-rj',
+    name: 'OOHYO',
+    song: 'Teddy Bear Rises',
+    listened: false,
+  },
+  {
+    id: '4',
+    imageUrl:
+      'https://lh3.googleusercontent.com/Hbbh7Jzq88QYWaxBC-5wTFngYiLp-i5BM49BSMBMo-zZ2c0o7Wd9QO6TcEJe4k5U2CvOOn8yBYU5ywE=w544-h544-l90-rj',
+    name: '鮮于貞娥',
+    song: 'Run with Me',
+    listened: true,
+  },
+])
 
 const fetchOriginData = () => {
-  newProducts.value.push(...products)
+  newProducts.value = [...products.value]
 }
 
-const newAddProduct = ref({
-  name: '',
-  imageUrl: '',
-})
-
+const newAddProduct = ref({ name: '', song: '', imageUrl: '' })
 const newItem = ref(false)
 const addNewItem = () => {
   newItem.value = true
@@ -117,36 +175,31 @@ const addNewItem = () => {
 
 const confirmEdit = () => {
   if (!newAddProduct.value.id) {
-    const data = {
+    newProducts.value.push({
       id: new Date().getTime(), //unix timestamp
       imageUrl: newAddProduct.value.imageUrl,
       name: newAddProduct.value.name,
-      onStock: false,
-    }
-    newProducts.value.push(data)
-  } else {
-    console.log('same')
-    // 比對資料id
-    newProducts.value.forEach((item, index) => {
-      if (item.id === newAddProduct.value.id) {
-        newProducts.value[index] = { ...newAddProduct.value }
-      }
+      song: newAddProduct.value.song,
+      listened: false,
     })
+  } else {
+    // 比對資料id
+    const index = newProducts.value.findIndex((item) => item.id === newAddProduct.value.id)
+    if (index !== -1) {
+      newProducts.value.splice(index, 1, { ...newAddProduct.value })
+    }
   }
-  newAddProduct.value = {}
+  newAddProduct.value = { name: '', song: '', imageUrl: '' }
   newItem.value = false
 }
 
 const cancelEdit = () => {
-  newAddProduct.value = {}
+  newAddProduct.value = { name: '', song: '', imageUrl: '' }
   newItem.value = false
 }
 
-const editItem = (cilckedItem) => {
-  console.log(cilckedItem)
-  newAddProduct.value = { ...cilckedItem }
-  console.log('newAddProduct', newAddProduct.value)
-  console.log('newProducts', newProducts.value)
+const editItem = (clickedItem) => {
+  Object.assign(newAddProduct.value, clickedItem)
   newItem.value = true
 }
 
@@ -156,19 +209,11 @@ onMounted(() => {
 </script>
 
 <style scoped land="scss">
-table {
-  width: 100%;
-  th,
-  td {
-    text-align: left;
-  }
-}
-
 .form-wrap {
   margin-bottom: 1rem;
 }
 
-form {
+.form {
   margin: 16px 0;
   width: 100%;
   display: flex;
@@ -205,82 +250,50 @@ form {
   }
 }
 
-.table-wrap {
-  background-color: #fbfbfb;
-  border: 1.5px solid #f4f4f4;
-  border-radius: 10px;
-  padding: 16px 24px;
-
-  th {
-    text-align: center;
-    font-weight: 700;
-    color: #3b3b3b;
-    padding: 16px 0;
+.img-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    display: block;
+    width: 240px;
+    height: auto;
   }
-
-  td {
-    text-align: center;
-    margin: 12px 0;
-    &.img-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      img {
-        display: block;
-        width: 100px;
-        height: auto;
-      }
-    }
-  }
-}
-.button {
-  color: #6272c3;
-  background-color: #eff3fc;
-  border: 1.5px solid #f4f4f4;
-  font-weight: bold;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  display: inline-block;
-  height: fit-content;
-  font-size: 16px;
-}
-.img-fluid {
-  height: auto;
-  object-fit: cover;
-  display: block;
-  width: 300px;
-  border-radius: 5px;
 }
 
 .img-area {
-  width: auto;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   margin: 0 24px;
   background-color: #f2f2f2;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+  .img-fluid {
+    height: auto;
+    object-fit: cover;
+    display: block;
+    width: 100px;
+    border-radius: 5px;
+  }
+}
+
+.flow-area {
+  overflow-y: auto;
+  height: 550px;
+}
+
+.btn-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button-wrap {
   display: flex;
-  flex-direction: column;
+  gap: 0.5rem;
   .button {
     margin-bottom: 16px;
   }
-}
-
-/* /// */
-.header-icon {
-  margin-right: 8px;
-  background-color: #eff3fc;
-  padding: 8px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
 }
 </style>
