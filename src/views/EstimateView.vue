@@ -61,7 +61,7 @@ const tableHeaders = [
   },
   {
     key: 'backlogNum',
-    width: '10%',
+    width: '5%',
     label: 'Backlog',
   },
   {
@@ -76,26 +76,26 @@ const tableHeaders = [
   },
   {
     key: 'estimateTime',
-    width: '10%',
+    width: '5%',
     label: '預估時數',
     slotName: 'estimateTime',
   },
   {
     key: 'reactiveTime',
-    width: '10%',
+    width: '5%',
     label: '實際完成時數',
     slotName: 'reactiveTime',
   },
   {
     key: 'status',
-    width: '10%',
+    width: '5%',
     label: '狀態',
     // 在想要監控的地方必須定義 slotName
     slotName: 'status',
   },
   {
     key: 'link',
-    width: '10%',
+    width: '5%',
     label: '連結',
     slotName: 'link',
   },

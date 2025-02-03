@@ -4,7 +4,7 @@
     <section>
       <Title>
         放鬆列表
-        <template #subtitle> 聽音樂來場適當的放鬆 </template>
+        <template #subtitle> 用音樂來場放鬆小旅行 </template>
         <template #btns>
           <IconBlock :icon="['fas', 'magnifying-glass']" />
           <IconBlock :icon="['fas', 'circle-info']" />
@@ -18,12 +18,12 @@
       <div v-if="newItem" class="form">
         <div class="item-wrap">
           <div class="item">
-            <label for="name" class="form-label">藝人</label>
+            <label for="name" class="form-label">頻道名稱</label>
             <input
               type="text"
               id="name"
               class="form-control"
-              placeholder="請輸入藝人名稱"
+              placeholder="請輸入頻道名稱"
               v-model="newAddProduct.name"
             />
           </div>
@@ -37,14 +37,24 @@
               v-model="newAddProduct.song"
             />
           </div>
+          <div class="item">
+            <label for="link" class="form-label">YouTube網址</label>
+            <input
+              type="text"
+              id="link"
+              class="form-control"
+              placeholder="請輸入YouTube網址"
+              v-model="newAddProduct.link"
+            />
+          </div>
           <div class="item input-wrap">
             <div>
-              <label for="productImage" class="form-label">專輯圖片</label>
+              <label for="productImage" class="form-label">圖片網址</label>
               <input
                 type="text"
                 id="productImage"
                 class="form-control"
-                placeholder="請輸入專輯圖片"
+                placeholder="請輸入圖片網址"
                 v-model="newAddProduct.imageUrl"
               />
             </div>
@@ -53,7 +63,7 @@
             </div>
           </div>
         </div>
-        <div class="button-wrap">
+        <div class="btn-wrap">
           <FilledButton @click="confirmEdit" class="button">更新</FilledButton>
           <FilledButton @click="cancelEdit">取消</FilledButton>
         </div>
@@ -62,7 +72,7 @@
 
     <!-- list area -->
     <section class="flow-area">
-      <Table :tableHeaders="tableHeaders" :tableData="newProducts">
+      <Table :tableHeaders="tableHeaders" :tableData="relaxStore.listData">
         <template #imageUrl="{ row }">
           <div class="img-wrap">
             <img :src="row.imageUrl" class="img-fluid" :alt="row.name" />
@@ -74,6 +84,10 @@
         <template #action="{ row }">
           <div class="btn-wrap">
             <FilledButton @click="editItem(row)">修改</FilledButton>
+            <FilledButton @click="deleteItem(row)">刪除</FilledButton>
+            <FilledButton :icon="['fas', 'arrow-right']" :href="row.link" target="_blank">
+              前往聆聽
+            </FilledButton>
           </div>
         </template>
       </Table>
@@ -83,6 +97,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRelaxStore } from '@/stores/relaxStore.js'
+import axios from 'axios'
 
 // components
 import Title from '@/components/Title.vue'
@@ -90,7 +106,8 @@ import Table from '@/components/atoms/Table.vue'
 import IconBlock from '@/components/atoms/IconBlock.vue'
 import FilledButton from '@/components/atoms/FilledButton.vue'
 
-const newProducts = ref([])
+const relaxStore = useRelaxStore()
+// const listData = ref([])
 const tableHeaders = [
   {
     key: 'id',
@@ -102,7 +119,7 @@ const tableHeaders = [
   {
     key: 'name',
     width: '10%',
-    label: '藝人',
+    label: '頻道名稱',
   },
   {
     key: 'song',
@@ -112,90 +129,85 @@ const tableHeaders = [
   {
     key: 'imageUrl',
     width: '10%',
-    label: '專輯圖片',
+    label: '圖片',
     slotName: 'imageUrl',
   },
   {
     key: 'listened',
-    width: '10%',
+    width: '5%',
     label: '聆聽狀態',
     slotName: 'listened',
   },
   {
     key: 'action',
-    width: '10%',
+    width: '15%',
     label: '操作',
     slotName: 'action',
   },
 ]
-const products = ref([
-  {
-    id: '1',
-    imageUrl:
-      'https://lh3.googleusercontent.com/gT--ZwubK3mlhw5WcwBReN9QSJpzLzZntA20Js3XxTeX4CZXa-OEq89tmrwJugV97U5GJTtKS4ofzpV2mQ=w544-h544-l90-rj',
-    name: 'Lee Jin Ah',
-    song: 'Starry Night',
-    listened: false,
-  },
-  {
-    id: '2',
-    imageUrl:
-      'https://lh3.googleusercontent.com/kiU4wpUCReZaSxlujjo8Ye-wN37aYR3gjkNoNEriU1G-sbV4Y1dmS9a5HWRD8JP0yv08lfSvWHe3ykZP=w544-h544-l90-rj',
-    name: 'Choi Yu Ree',
-    song: '숲',
-    listened: true,
-  },
-  {
-    id: '3',
-    imageUrl:
-      'https://lh3.googleusercontent.com/6NCf4gce8p3kug3e-I7u8HfObnCdaLi5ranbyxVh9iPBXVTda1xckbvWK7IZnxZTczfqLLrB8bV2Lvo=w544-h544-l90-rj',
-    name: 'OOHYO',
-    song: 'Teddy Bear Rises',
-    listened: false,
-  },
-  {
-    id: '4',
-    imageUrl:
-      'https://lh3.googleusercontent.com/Hbbh7Jzq88QYWaxBC-5wTFngYiLp-i5BM49BSMBMo-zZ2c0o7Wd9QO6TcEJe4k5U2CvOOn8yBYU5ywE=w544-h544-l90-rj',
-    name: '鮮于貞娥',
-    song: 'Run with Me',
-    listened: true,
-  },
-])
 
-const fetchOriginData = () => {
-  newProducts.value = [...products.value]
-}
-
-const newAddProduct = ref({ name: '', song: '', imageUrl: '' })
+const newAddProduct = ref({ name: '', song: '', imageUrl: '', link: '' })
 const newItem = ref(false)
 const addNewItem = () => {
   newItem.value = true
 }
 
-const confirmEdit = () => {
+const confirmEdit = async () => {
+  const sendData = {
+    name: newAddProduct.value.name,
+    song: newAddProduct.value.song,
+    imageUrl: newAddProduct.value.imageUrl,
+    link: newAddProduct.value.link,
+  }
   if (!newAddProduct.value.id) {
-    newProducts.value.push({
-      id: new Date().getTime(), //unix timestamp
-      imageUrl: newAddProduct.value.imageUrl,
-      name: newAddProduct.value.name,
-      song: newAddProduct.value.song,
+    await relaxStore.addRelaxItem({
+      id: String(new Date().getTime()), //unix timestamp
       listened: false,
+      ...sendData,
     })
   } else {
     // 比對資料id
-    const index = newProducts.value.findIndex((item) => item.id === newAddProduct.value.id)
+    const index = relaxStore.listData.findIndex(
+      (item) => String(item.id) === String(newAddProduct.value.id),
+    )
+    console.log('要更新的 ID:', newAddProduct.value.id)
+    console.log('listData:', relaxStore.listData)
+    console.log('找到的 index:', index)
     if (index !== -1) {
-      newProducts.value.splice(index, 1, { ...newAddProduct.value })
+      const response = await relaxStore.updateRelaxItem(newAddProduct.value.id, sendData)
+      if (response) {
+        relaxStore.listData.splice(index, 1, response.data)
+      }
     }
   }
-  newAddProduct.value = { name: '', song: '', imageUrl: '' }
+  newAddProduct.value = { name: '', song: '', imageUrl: '', link: '' }
   newItem.value = false
 }
 
 const cancelEdit = () => {
-  newAddProduct.value = { name: '', song: '', imageUrl: '' }
+  newAddProduct.value = { name: '', song: '', imageUrl: '', link: '' }
   newItem.value = false
+}
+
+const deleteItem = async (item) => {
+  if (!item.id) {
+    console.error('產品 ID 不存在')
+    return
+  }
+  console.log('傳入的 item.id:', item.id, '型別:', typeof item.id)
+  // 比對資料id
+  const index = relaxStore.listData.findIndex((data) => String(data.id) === String(item.id))
+  console.log('要刪除的 ID:', item.id)
+  console.log('listData:', relaxStore.listData)
+  console.log('找到的 index:', index)
+  if (index !== -1) {
+    const response = await relaxStore.deleteRelaxItem(item.id)
+    if (response) {
+      console.log('刪除成功，更新顯示狀態')
+    } else {
+      console.log('刪除失敗')
+    }
+  }
 }
 
 const editItem = (clickedItem) => {
@@ -203,8 +215,8 @@ const editItem = (clickedItem) => {
   newItem.value = true
 }
 
-onMounted(() => {
-  fetchOriginData()
+onMounted(async () => {
+  await relaxStore.fetchListData()
 })
 </script>
 
@@ -223,7 +235,7 @@ onMounted(() => {
     display: flex;
     .item {
       margin-bottom: 20px;
-      margin-right: 40px;
+      margin-right: 12px;
       label {
         display: block;
         margin-bottom: 4px;
@@ -262,7 +274,7 @@ onMounted(() => {
 }
 
 .img-area {
-  width: 100px;
+  width: 180px;
   height: 100px;
   margin: 0 24px;
   background-color: #f2f2f2;
@@ -273,7 +285,7 @@ onMounted(() => {
     height: auto;
     object-fit: cover;
     display: block;
-    width: 100px;
+    width: 180px;
     border-radius: 5px;
   }
 }
@@ -287,13 +299,8 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.button-wrap {
-  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  .button {
-    margin-bottom: 16px;
-  }
+  flex-direction: column;
 }
 </style>

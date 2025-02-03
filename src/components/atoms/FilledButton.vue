@@ -63,7 +63,8 @@ const tag = computed(() => {
   display: flex;
   align-items: center;
   height: fit-content;
-  font-size: 16px;
+  font-size: 15px;
+  display: inline-flex;
 
   &:hover {
     background-color: #e2e8f0;
