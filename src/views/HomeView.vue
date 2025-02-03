@@ -4,64 +4,40 @@
       <h2>Activity Overview</h2>
     </section>
     <section class="filter-wrap">
-      <input type="text" placeholder="請輸入搜尋內容..." />
       <div class="tab-wrap">
-        <div class="tab active">all</div>
-        <div class="tab">Chatbot</div>
-        <div class="tab">It-admin</div>
+        <div
+          class="tab"
+          v-for="(tag, idx) in tags"
+          :key="idx"
+          @click="activeTag = idx"
+          :class="{ active: activeTag === idx }"
+        >
+          {{ tag.title }}
+        </div>
       </div>
+      <input type="text" placeholder="請輸入搜尋內容..." />
     </section>
-    <section class="card-wrap">
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
-      <div class="card">
-        <h3>10</h3>
-        <h5>Created Leads</h5>
-        <p>all types</p>
-      </div>
+
+    <!-- Tab Area -->
+    <section>
+      <HomeList v-if="activeTag === 0"></HomeList>
+      <HomeStatus v-else-if="activeTag === 1"></HomeStatus>
+      <HomeCalendar v-else-if="activeTag === 2"></HomeCalendar>
     </section>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+
+import HomeList from '@/components/home/HomeLIst.vue'
+import HomeStatus from '@/components/home/HomeStatus.vue'
+import HomeCalendar from '@/components/home/HomeCalendar.vue'
+
+const activeTag = ref(0) // 預設選中 "標籤 1"
+// tag渲染
+const tags = ref([{ title: '專案列表' }, { title: '執行狀態' }, { title: '行事曆' }])
+</script>
 <style scoped lang="scss">
 .header-wrap {
   text-align: center;
@@ -95,46 +71,13 @@
       border-radius: 10px;
       margin-left: 1rem;
       font-size: 16px;
+      cursor: pointer;
       &.active {
         background-color: #eff3fc;
         color: #000;
         font-weight: bold;
       }
     }
-  }
-}
-
-.card-wrap {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  height: 500px;
-  overflow-y: auto;
-  padding: 0 1rem;
-}
-.card {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  padding: 32px 0;
-  margin: 16px;
-  width: calc(33.3333% - 32px);
-  border: 0.5px solid #e6e6e6;
-  border-radius: 10px;
-  h3 {
-    color: #6272c3;
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-  h5 {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  p {
-    font-size: 14px;
-    color: #616066;
   }
 }
 </style>
